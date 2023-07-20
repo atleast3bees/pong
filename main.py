@@ -8,6 +8,7 @@ try:
     while not terminated:
         action = Pong.getPlayerInput()
         terminated = Pong.step(action)
+        Pong.getAgentAction()
         Pong.render()
     Pong.close()
 except FileNotFoundError:

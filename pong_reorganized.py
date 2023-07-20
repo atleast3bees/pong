@@ -66,6 +66,28 @@ class PongEnvironment:
             if action[pygame.K_s]:
                 self.left_pos += 400 * self.dt
         
+        if self.left_points >= self.score_limit or self.right_points >= self.score_limit:
+            return True
+        else:
+            return False
+
+    def render(self):
+        self.screen.fill("black")
+        pygame.draw.rect(self.screen, "white", (20, self.left_pos, 8, 50))
+        pygame.draw.rect(self.screen, "white", (455, self.right_pos, 8, 50))
+        for i in range (15):
+            pygame.draw.rect(self.screen, "white", (238, i*20 + 5, 4, 10))
+        self.left_text = self.my_font.render(str(self.left_points), False, "white")
+        self.screen.blit(self.left_text, (160, 10))
+        self.right_text = self.my_font.render(str(self.right_points), False, "white")
+        self.screen.blit(self.right_text, (270, 10))
+        pygame.draw.rect(self.screen, "white", (self.ball_x, self.ball_y, 8, 8))
+        pygame.draw.rect(self.screen, "white", (self.ball_x-self.ball_xvelocity, self.ball_y-self.ball_yvelocity, 4, 4))
+
+        pygame.display.flip()
+        self.dt = self.clock.tick(60)/1000 
+
+    def getAgentAction(self):
         if self.agent == "player":
             if self.right_pos > 0:
                 if action[pygame.K_UP]:
@@ -94,26 +116,6 @@ class PongEnvironment:
                 self.right_pos += 400 * self.dt
         else:
             raise InvalidAgentError("Please select from ['player', 'random_agent', 'easy_cpu', 'hard_cpu']")
-        if self.left_points >= self.score_limit or self.right_points >= self.score_limit:
-            return True
-        else:
-            return False
-
-    def render(self):
-        self.screen.fill("black")
-        pygame.draw.rect(self.screen, "white", (20, self.left_pos, 8, 50))
-        pygame.draw.rect(self.screen, "white", (455, self.right_pos, 8, 50))
-        for i in range (15):
-            pygame.draw.rect(self.screen, "white", (238, i*20 + 5, 4, 10))
-        self.left_text = self.my_font.render(str(self.left_points), False, "white")
-        self.screen.blit(self.left_text, (160, 10))
-        self.right_text = self.my_font.render(str(self.right_points), False, "white")
-        self.screen.blit(self.right_text, (270, 10))
-        pygame.draw.rect(self.screen, "white", (self.ball_x, self.ball_y, 8, 8))
-        pygame.draw.rect(self.screen, "white", (self.ball_x-self.ball_xvelocity, self.ball_y-self.ball_yvelocity, 4, 4))
-
-        pygame.display.flip()
-        self.dt = self.clock.tick(60)/1000 
     
     @staticmethod
     def close():
