@@ -9,9 +9,14 @@ from random_CPU import RandomAgent
 easyA = EasyAgent()
 hardA = HardAgent()
 randA = RandomAgent()
+agentlist = ("player", "random_agent", "easy_cpu", "hard_cpu")
 
 class InvalidAgentError(Exception):
     "Raised when an invalid agent is passed in"
+    pass
+
+class InvalidInputError(Exception):
+    "Raised when an invalid argument is passed in"
     pass
 
 class PongEnvironment:
@@ -38,7 +43,12 @@ class PongEnvironment:
                 self.score_limit = 1
             else:
                 self.score_limit = score_limit
-        self.agent = agent
+        else:
+            raise InvalidInputError("Please enter an integer greater or equal to 1")
+        if isinstance(agent, str) and not isinstance(agent, bool) and agent in agentlist:
+            self.agent = agent
+        else:
+            raise InvalidAgentError("Please select from ['player', 'random_agent', 'easy_cpu', 'hard_cpu']")
     
     def step(self, action):
         for event in pygame.event.get():
@@ -114,8 +124,6 @@ class PongEnvironment:
                 self.right_pos -= 400 * self.dt
             else:
                 self.right_pos += 400 * self.dt
-        elif self.agent != "player":
-            raise InvalidAgentError("Please select from ['player', 'random_agent', 'easy_cpu', 'hard_cpu']")
     
     @staticmethod
     def close():
