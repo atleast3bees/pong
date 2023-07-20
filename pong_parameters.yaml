@@ -1,2 +1,2 @@
 scorelimit: 20
-agent: "random_agent"
+agent: "easy_cpu"

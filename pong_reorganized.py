@@ -1,5 +1,12 @@
+import sys
 import pygame
 from numpy import random
+sys.path.append("agents")
+from easy_CPU import EasyAgent
+from hard_CPU import HardAgent
+
+easy = EasyAgent()
+hard = HardAgent()
 
 class InvalidAgentError(Exception):
     "Raised when an invalid agent is passed in"
@@ -58,22 +65,35 @@ class PongEnvironment:
         if self.left_pos < 250:        
             if action[pygame.K_s]:
                 self.left_pos += 400 * self.dt
-        if self.agent == "random_agent":
-            if random.choice((0, 1)) == 1:
-                if self.right_pos > 0:
-                    self.right_pos -= 400 * self.dt
-            else:
-                if self.right_pos < 250:
-                    self.right_pos += 400 * self.dt
-        elif self.agent == "player":
+        
+        if self.agent == "player":
             if self.right_pos > 0:
                 if action[pygame.K_UP]:
                     self.right_pos -= 400 * self.dt
             if self.right_pos < 250:
                 if action[pygame.K_DOWN]:
                     self.right_pos += 400 * self.dt
+        elif self.agent == "random_agent":
+            if random.choice((0, 1)) == 1:
+                if self.right_pos > 0:
+                    self.right_pos -= 400 * self.dt
+            else:
+                if self.right_pos < 250:
+                    self.right_pos += 400 * self.dt
+        elif self.agent == "easy_cpu":
+            easy.update(self.ball_y, self.right_pos)
+            if easy.get_action() == "UP":
+                self.right_pos -= 400 * self.dt
+            else:
+                self.right_pos += 400 * self.dt
+        elif self.agent == "hard_cpu":
+            hard.update(self.ball_y, self.right_pos)
+            if hard.get_action() == "UP":
+                self.right_pos -= 400 * self.dt
+            else:
+                self.right_pos += 400 * self.dt
         else:
-            raise InvalidAgentError("Please select from ['player', 'random_agent']")
+            raise InvalidAgentError("Please select from ['player', 'random_agent', 'easy_cpu', 'hard_cpu']")
         if self.left_points >= self.score_limit or self.right_points >= self.score_limit:
             return True
         else:
@@ -93,7 +113,7 @@ class PongEnvironment:
         pygame.draw.rect(self.screen, "white", (self.ball_x-self.ball_xvelocity, self.ball_y-self.ball_yvelocity, 4, 4))
 
         pygame.display.flip()
-        self.dt = self.clock.tick(60)/1000  
+        self.dt = self.clock.tick(60)/1000 
     
     @staticmethod
     def close():
