@@ -1,2 +1,2 @@
 scorelimit: 20
-agent: "random_action"
+agent: "random_agent"

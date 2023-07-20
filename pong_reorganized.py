@@ -1,10 +1,14 @@
 import pygame
 from numpy import random
 
+class InvalidAgentError(Exception):
+    "Raised when an invalid agent is passed in"
+    pass
+
 class PongEnvironment:
     randv = (-5, 5)
 
-    def __init__(self, score_limit, agent):
+    def __init__(self, score_limit = 20, agent = "random_action"):
         pygame.font.init()
         pygame.init()
         pygame.display.set_caption("Pong")
@@ -20,7 +24,11 @@ class PongEnvironment:
         self.ball_y = 150
         self.ball_xvelocity = random.choice(PongEnvironment.randv)
         self.ball_yvelocity = random.choice(PongEnvironment.randv)
-        self.score_limit = score_limit
+        if isinstance(score_limit, int) and not isinstance(score_limit, bool):
+            if score_limit < 1:
+                self.score_limit = 1
+            else:
+                self.score_limit = score_limit
         self.agent = agent
     
     def step(self, action):
@@ -50,20 +58,22 @@ class PongEnvironment:
         if self.left_pos < 250:        
             if action[pygame.K_s]:
                 self.left_pos += 400 * self.dt
-        if self.agent == "random_action":
+        if self.agent == "random_agent":
             if random.choice((0, 1)) == 1:
                 if self.right_pos > 0:
                     self.right_pos -= 400 * self.dt
             else:
                 if self.right_pos < 250:
                     self.right_pos += 400 * self.dt
-        else:
+        elif self.agent == "player":
             if self.right_pos > 0:
                 if action[pygame.K_UP]:
                     self.right_pos -= 400 * self.dt
             if self.right_pos < 250:
                 if action[pygame.K_DOWN]:
                     self.right_pos += 400 * self.dt
+        else:
+            raise InvalidAgentError("Please select from ['player', 'random_agent']")
         if self.left_points >= self.score_limit or self.right_points >= self.score_limit:
             return True
         else:
