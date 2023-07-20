@@ -4,9 +4,11 @@ from numpy import random
 sys.path.append("agents")
 from easy_CPU import EasyAgent
 from hard_CPU import HardAgent
+from random_CPU import RandomAgent
 
-easy = EasyAgent()
-hard = HardAgent()
+easyA = EasyAgent()
+hardA = HardAgent()
+randA = RandomAgent()
 
 class InvalidAgentError(Exception):
     "Raised when an invalid agent is passed in"
@@ -95,21 +97,20 @@ class PongEnvironment:
 
     def getAgentAction(self):
         if self.agent == "random_agent":
-            if random.choice((0, 1)) == 1:
-                if self.right_pos > 0:
-                    self.right_pos -= 400 * self.dt
+            randA.update(self.ball_y, self.right_pos)
+            if randA.get_action() == "UP":
+                self.right_pos -= 400 * self.dt
             else:
-                if self.right_pos < 250:
-                    self.right_pos += 400 * self.dt
+                self.right_pos += 400 * self.dt
         elif self.agent == "easy_cpu":
-            easy.update(self.ball_y, self.right_pos)
-            if easy.get_action() == "UP":
+            easyA.update(self.ball_y, self.right_pos)
+            if easyA.get_action() == "UP":
                 self.right_pos -= 400 * self.dt
             else:
                 self.right_pos += 400 * self.dt
         elif self.agent == "hard_cpu":
-            hard.update(self.ball_y, self.right_pos)
-            if hard.get_action() == "UP":
+            hardA.update(self.ball_y, self.right_pos)
+            if hardA.get_action() == "UP":
                 self.right_pos -= 400 * self.dt
             else:
                 self.right_pos += 400 * self.dt
