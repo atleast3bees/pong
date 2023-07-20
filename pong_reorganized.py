@@ -15,7 +15,7 @@ class InvalidAgentError(Exception):
 class PongEnvironment:
     randv = (-5, 5)
 
-    def __init__(self, score_limit = 20, agent = "random_action"):
+    def __init__(self, score_limit = 20, agent = "player"):
         pygame.font.init()
         pygame.init()
         pygame.display.set_caption("Pong")
@@ -65,7 +65,13 @@ class PongEnvironment:
         if self.left_pos < 250:        
             if action[pygame.K_s]:
                 self.left_pos += 400 * self.dt
-        
+        if self.agent == "player":
+            if self.right_pos > 0:
+                if action[pygame.K_UP]:
+                    self.right_pos -= 400 * self.dt
+            if self.right_pos < 250:
+                if action[pygame.K_DOWN]:
+                    self.right_pos += 400 * self.dt
         if self.left_points >= self.score_limit or self.right_points >= self.score_limit:
             return True
         else:
@@ -88,14 +94,7 @@ class PongEnvironment:
         self.dt = self.clock.tick(60)/1000 
 
     def getAgentAction(self):
-        if self.agent == "player":
-            if self.right_pos > 0:
-                if action[pygame.K_UP]:
-                    self.right_pos -= 400 * self.dt
-            if self.right_pos < 250:
-                if action[pygame.K_DOWN]:
-                    self.right_pos += 400 * self.dt
-        elif self.agent == "random_agent":
+        if self.agent == "random_agent":
             if random.choice((0, 1)) == 1:
                 if self.right_pos > 0:
                     self.right_pos -= 400 * self.dt
@@ -114,7 +113,7 @@ class PongEnvironment:
                 self.right_pos -= 400 * self.dt
             else:
                 self.right_pos += 400 * self.dt
-        else:
+        elif self.agent != "player":
             raise InvalidAgentError("Please select from ['player', 'random_agent', 'easy_cpu', 'hard_cpu']")
     
     @staticmethod
