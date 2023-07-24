@@ -1,3 +1,11 @@
+"""
+Author : Rori Wu
+
+Date : 7/19/23
+
+Description: Runs the pong program
+"""
+
 import yaml
 from pong_reorganized import PongEnvironment
 try:

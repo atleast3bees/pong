@@ -1,3 +1,11 @@
+"""
+Author : Rori Wu
+
+Date : 7/19/23
+
+Description: Contains the PongEnvironment class and all of its functionality
+"""
+
 import sys
 import pygame
 from numpy import random
@@ -23,6 +31,7 @@ class InvalidInputError(Exception):
 class PongEnvironment:
     randv = (-5, 5)
 
+    #Intiializes the PongEnvironment class
     def __init__(self, score_limit = 20, agent_name = "player"):
         pygame.font.init()
         pygame.init()
@@ -54,7 +63,8 @@ class PongEnvironment:
         for i in range (0, len(agentlist)-1):
             if self.agent_name == agentlist[i+1]:
                 self.agent = agents[i]
-    
+
+   #Updates the time and stops the game when the score limit is reached
     def step(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -66,6 +76,7 @@ class PongEnvironment:
         else:
             return False
 
+    #Runs all the ball physics and resets it if someone has scored
     def physics(self):
         self.ball_x += self.ball_xvelocity
         self.ball_y += self.ball_yvelocity
@@ -82,7 +93,8 @@ class PongEnvironment:
             self.ball_y = 150
             self.ball_xvelocity = random.choice(PongEnvironment.randv)
             self.ball_yvelocity = random.choice(PongEnvironment.randv)
-
+    
+    #Renders all the visual elements of the game
     def render(self):
         self.screen.fill("black")
         pygame.draw.rect(self.screen, "white", (20, self.left_pos, 8, 50))
@@ -98,6 +110,7 @@ class PongEnvironment:
 
         pygame.display.flip() 
 
+    #Dictates the actions of the agent
     def get_agentaction(self):
         if self.agent_name != "player":
             if self.agent.get_action((self.ball_y, self.right_pos)) == "UP":
@@ -105,6 +118,7 @@ class PongEnvironment:
             else:
                 self.right_pos += 400 * self.dt
 
+    #Dictates the actions of the player
     def get_playeraction(self, action):
         if self.left_pos > 0:
             if action[pygame.K_w]:
@@ -120,10 +134,12 @@ class PongEnvironment:
                 if action[pygame.K_DOWN]:
                     self.right_pos += 400 * self.dt
     
+    #Quits the game
     @staticmethod
     def close():
         pygame.quit()
     
+    #Returns player input
     @staticmethod
     def get_playerinput():
         return pygame.key.get_pressed()

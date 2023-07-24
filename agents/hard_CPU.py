@@ -1,10 +1,21 @@
+"""
+Author : Rori Wu
+
+Date : 7/19/23
+
+Description: Contains the HardAgent class for use in pong.py
+"""
+
 from numpy import random
 
 class HardAgent:
+
+    #Initializes the HardAgent class
     def __init__(self):
         self.ball_y = 150
         self.right_pos = 150
 
+    #Returns the agent's action given a list argument
     def get_action(self, element):
         self.ball_y = element[0]
         self.right_pos = element[1]
