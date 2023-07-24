@@ -23,7 +23,7 @@ class InvalidInputError(Exception):
 class PongEnvironment:
     randv = (-5, 5)
 
-    def __init__(self, score_limit = 20, agent = "player"):
+    def __init__(self, score_limit = 20, agent_name = "player"):
         pygame.font.init()
         pygame.init()
         pygame.display.set_caption("Pong")
@@ -47,16 +47,19 @@ class PongEnvironment:
                 self.score_limit = score_limit
         else:
             raise InvalidInputError("Please enter an integer greater or equal to 1")
-        if isinstance(agent, str) and not isinstance(agent, bool) and agent in agentlist:
-            self.agent = agent
+        if isinstance(agent_name, str) and not isinstance(agent_name, bool) and agent_name in agentlist:
+            self.agent_name = agent_name
         else:
             raise InvalidAgentError("Please select from " + str(agentlist))
+        for i in range (0, len(agentlist)-1):
+            if self.agent_name == agentlist[i+1]:
+                self.agent = agents[i]
     
     def step(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                  return True
-                 
+
         self.dt = self.clock.tick(60)/1000 
         if self.left_points >= self.score_limit or self.right_points >= self.score_limit:
             return True
@@ -95,23 +98,21 @@ class PongEnvironment:
 
         pygame.display.flip() 
 
-    def getAgentAction(self):
-        for i in range (0, len(agentlist)-1):
-            if self.agent == agentlist[i+1]:
-                agents[i].update((self.ball_y, self.right_pos))
-                if agents[i].get_action() == "UP":
-                    self.right_pos -= 400 * self.dt
-                else:
-                    self.right_pos += 400 * self.dt
+    def get_agentaction(self):
+        if self.agent_name != "player":
+            if self.agent.get_action((self.ball_y, self.right_pos)) == "UP":
+                self.right_pos -= 400 * self.dt
+            else:
+                self.right_pos += 400 * self.dt
 
-    def getPlayerAction(self, action):
+    def get_playeraction(self, action):
         if self.left_pos > 0:
             if action[pygame.K_w]:
                 self.left_pos -= 400 * self.dt 
         if self.left_pos < 250:        
             if action[pygame.K_s]:
                 self.left_pos += 400 * self.dt
-        if self.agent == "player":
+        if self.agent_name == "player":
             if self.right_pos > 0:
                 if action[pygame.K_UP]:
                     self.right_pos -= 400 * self.dt
@@ -124,5 +125,5 @@ class PongEnvironment:
         pygame.quit()
     
     @staticmethod
-    def getPlayerInput():
+    def get_playerinput():
         return pygame.key.get_pressed()

@@ -6,9 +6,9 @@ try:
     Pong = PongEnvironment(configs['scorelimit'], configs['agent'])
     terminated = False
     while not terminated:
-        action = Pong.getPlayerInput()
-        Pong.getPlayerAction(action)
-        Pong.getAgentAction()
+        action = Pong.get_playerinput()
+        Pong.get_playeraction(action)
+        Pong.get_agentaction()
         Pong.physics()
         Pong.render()
         terminated = Pong.step()
