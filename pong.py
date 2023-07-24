@@ -98,7 +98,10 @@ class PongEnvironment:
     def render(self):
         self.screen.fill("black")
         pygame.draw.rect(self.screen, "white", (20, self.left_pos, 8, 50))
-        pygame.draw.rect(self.screen, "white", (455, self.right_pos, 8, 50))
+        if self.agent_name == "player":
+            pygame.draw.rect(self.screen, "white", (455, self.right_pos, 8, 50))
+        else:
+            pygame.draw.rect(self.screen, "red", (455, self.right_pos, 8, 50))
         for i in range (15):
             pygame.draw.rect(self.screen, "white", (238, i*20 + 5, 4, 10))
         self.left_text = self.my_font.render(str(self.left_points), False, "white")
