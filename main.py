@@ -7,7 +7,7 @@ Description: Runs the pong program
 """
 
 import yaml
-from pong_reorganized import PongEnvironment
+from pong import PongEnvironment
 try:
     with open('pong_parameters.yaml', 'r') as file:
         configs = yaml.safe_load(file)
