@@ -7,9 +7,11 @@ try:
     terminated = False
     while not terminated:
         action = Pong.getPlayerInput()
-        terminated = Pong.step(action)
+        Pong.getPlayerAction(action)
         Pong.getAgentAction()
+        Pong.physics()
         Pong.render()
+        terminated = Pong.step()
     Pong.close()
 except FileNotFoundError:
     print("File not found")

@@ -9,7 +9,8 @@ from random_CPU import RandomAgent
 easyA = EasyAgent()
 hardA = HardAgent()
 randA = RandomAgent()
-agentlist = ("player", "random_agent", "easy_cpu", "hard_cpu")
+agentlist = ("player", "easy_cpu", "hard_cpu", "random_cpu")
+agents = (easyA, hardA, randA)
 
 class InvalidAgentError(Exception):
     "Raised when an invalid agent is passed in"
@@ -38,6 +39,7 @@ class PongEnvironment:
         self.ball_y = 150
         self.ball_xvelocity = random.choice(PongEnvironment.randv)
         self.ball_yvelocity = random.choice(PongEnvironment.randv)
+
         if isinstance(score_limit, int) and not isinstance(score_limit, bool):
             if score_limit < 1:
                 self.score_limit = 1
@@ -48,13 +50,20 @@ class PongEnvironment:
         if isinstance(agent, str) and not isinstance(agent, bool) and agent in agentlist:
             self.agent = agent
         else:
-            raise InvalidAgentError("Please select from ['player', 'random_agent', 'easy_cpu', 'hard_cpu']")
+            raise InvalidAgentError("Please select from " + str(agentlist))
     
-    def step(self, action):
+    def step(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                  return True
+                 
+        self.dt = self.clock.tick(60)/1000 
+        if self.left_points >= self.score_limit or self.right_points >= self.score_limit:
+            return True
+        else:
+            return False
 
+    def physics(self):
         self.ball_x += self.ball_xvelocity
         self.ball_y += self.ball_yvelocity
         if ((self.ball_x >= 450 and self.ball_x < 460 and self.right_pos <= self.ball_y and self.right_pos >= self.ball_y - 50) or (self.ball_x <= 25 and self.ball_x > 15 and self.left_pos <= self.ball_y and self.left_pos >= self.ball_y - 50)):
@@ -71,24 +80,6 @@ class PongEnvironment:
             self.ball_xvelocity = random.choice(PongEnvironment.randv)
             self.ball_yvelocity = random.choice(PongEnvironment.randv)
 
-        if self.left_pos > 0:
-            if action[pygame.K_w]:
-                self.left_pos -= 400 * self.dt 
-        if self.left_pos < 250:        
-            if action[pygame.K_s]:
-                self.left_pos += 400 * self.dt
-        if self.agent == "player":
-            if self.right_pos > 0:
-                if action[pygame.K_UP]:
-                    self.right_pos -= 400 * self.dt
-            if self.right_pos < 250:
-                if action[pygame.K_DOWN]:
-                    self.right_pos += 400 * self.dt
-        if self.left_points >= self.score_limit or self.right_points >= self.score_limit:
-            return True
-        else:
-            return False
-
     def render(self):
         self.screen.fill("black")
         pygame.draw.rect(self.screen, "white", (20, self.left_pos, 8, 50))
@@ -102,28 +93,31 @@ class PongEnvironment:
         pygame.draw.rect(self.screen, "white", (self.ball_x, self.ball_y, 8, 8))
         pygame.draw.rect(self.screen, "white", (self.ball_x-self.ball_xvelocity, self.ball_y-self.ball_yvelocity, 4, 4))
 
-        pygame.display.flip()
-        self.dt = self.clock.tick(60)/1000 
+        pygame.display.flip() 
 
     def getAgentAction(self):
-        if self.agent == "random_agent":
-            randA.update(self.ball_y, self.right_pos)
-            if randA.get_action() == "UP":
-                self.right_pos -= 400 * self.dt
-            else:
-                self.right_pos += 400 * self.dt
-        elif self.agent == "easy_cpu":
-            easyA.update(self.ball_y, self.right_pos)
-            if easyA.get_action() == "UP":
-                self.right_pos -= 400 * self.dt
-            else:
-                self.right_pos += 400 * self.dt
-        elif self.agent == "hard_cpu":
-            hardA.update(self.ball_y, self.right_pos)
-            if hardA.get_action() == "UP":
-                self.right_pos -= 400 * self.dt
-            else:
-                self.right_pos += 400 * self.dt
+        for i in range (0, len(agentlist)-1):
+            if self.agent == agentlist[i+1]:
+                agents[i].update((self.ball_y, self.right_pos))
+                if agents[i].get_action() == "UP":
+                    self.right_pos -= 400 * self.dt
+                else:
+                    self.right_pos += 400 * self.dt
+
+    def getPlayerAction(self, action):
+        if self.left_pos > 0:
+            if action[pygame.K_w]:
+                self.left_pos -= 400 * self.dt 
+        if self.left_pos < 250:        
+            if action[pygame.K_s]:
+                self.left_pos += 400 * self.dt
+        if self.agent == "player":
+            if self.right_pos > 0:
+                if action[pygame.K_UP]:
+                    self.right_pos -= 400 * self.dt
+            if self.right_pos < 250:
+                if action[pygame.K_DOWN]:
+                    self.right_pos += 400 * self.dt
     
     @staticmethod
     def close():

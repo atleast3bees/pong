@@ -5,9 +5,9 @@ class EasyAgent:
         self.ball_y = 150
         self.right_pos = 150
         
-    def update(self, ball_y, right_pos):
-        self.ball_y = ball_y
-        self.right_pos = right_pos 
+    def update(self, element):
+        self.ball_y = element[0]
+        self.right_pos = element[1]
 
     def get_action(self):
         if self.right_pos >= 250:
