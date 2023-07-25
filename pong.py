@@ -32,7 +32,7 @@ class PongEnvironment:
     randv = (-5, 5)
 
     #Intiializes the PongEnvironment class
-    def __init__(self, score_limit = 20, agent_name = "player"):
+    def __init__(self, score_limit = 20, agent_name = "player", color_id = False):
         pygame.font.init()
         pygame.init()
         pygame.display.set_caption("Pong")
@@ -60,6 +60,10 @@ class PongEnvironment:
             self.agent_name = agent_name
         else:
             raise InvalidAgentError("Please select from " + str(agentlist))
+        if isinstance(color_id, bool):
+            self.color_id = color_id
+        else:
+            raise InvalidInputError("Please enter in a boolean value, True or False")
         for i in range (0, len(agentlist)-1):
             if self.agent_name == agentlist[i+1]:
                 self.agent = agents[i]
@@ -101,7 +105,10 @@ class PongEnvironment:
         if self.agent_name == "player":
             pygame.draw.rect(self.screen, "white", (455, self.right_pos, 8, 50))
         else:
-            pygame.draw.rect(self.screen, "red", (455, self.right_pos, 8, 50))
+            if self.color_id:
+                pygame.draw.rect(self.screen, "red", (455, self.right_pos, 8, 50))
+            else:
+                pygame.draw.rect(self.screen, "white", (455, self.right_pos, 8, 50)) 
         for i in range (15):
             pygame.draw.rect(self.screen, "white", (238, i*20 + 5, 4, 10))
         self.left_text = self.my_font.render(str(self.left_points), False, "white")

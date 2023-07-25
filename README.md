@@ -22,7 +22,7 @@ Player: Manual control for two players.
 
 ## How to Use
 
-The repo comes with a .yaml file for easy configuration. The default score limit (when the game ends) is 20 and the default agent is 'player', but these can easily be adjusted.
+The repo comes with a .yaml file for easy configuration. The default score limit (when the game ends) is 20 and the default agent (what's controlling the right paddle) is 'player', but these can easily be adjusted. Additionally, there is the option 'colorid' which when True, colors all computer controlled paddles to red. It is set to False by default.
 
 <img width="166" alt="Screenshot 2023-07-24 at 2 27 28 PM" src="https://github.com/atleast3bees/pong/assets/111519324/612bcbda-27b1-4e8b-a2f0-07b46c7f3aac">
 

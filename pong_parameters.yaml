@@ -1,2 +1,3 @@
 scorelimit: 20
 agent: "easy_cpu"
+colorid: True
