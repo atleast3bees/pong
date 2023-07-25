@@ -22,12 +22,16 @@ Player: Manual control for two players.
 
 ## Installation and Usage
 
-The repo comes with a .yaml file for easy configuration. The default score limit (when the game ends) is 20 and the default agent (what's controlling the right paddle) is 'player', but these can easily be adjusted. Additionally, there is the option 'colorid' which when True, colors all computer controlled paddles to red. It is set to False by default.
+The repo comes with two .yaml files for easy use.
+
+pong_parameters is for configuration. The default score limit (when the game ends) is 20 and the default agent (what's controlling the right paddle) is 'player', but these can easily be adjusted. Additionally, there is the option 'colorid' which when True, colors all computer controlled paddles to red. It is set to False by default.
 
 
 Example of colorid being set to True
 
 ![ezgif com-video-to-gif](https://github.com/atleast3bees/pong/assets/111519324/ebb71117-fa07-4a42-be06-a934b2cc028e)
+
+agent_list is for adding/changing agents. Please keep in mind that you will also have to manually import, create an instance of, and add to the agent list.
 
 To add extra agents, add its file to the agents folder. Then, import the class into pong.py and create a new object. This object must be added to the tuple 'agents' first. 
 
@@ -36,6 +40,8 @@ To add extra agents, add its file to the agents folder. Then, import the class i
 <img width="252" alt="Screenshot 2023-07-24 at 2 29 09 PM" src="https://github.com/atleast3bees/pong/assets/111519324/58e8bfa0-6618-45ce-837f-c19070d2392d">
 
 Finally, adjust 'agentlist' to add the name of the new agent. You should be able to use the agent by setting the argument in the .yaml file to whatever you named it.
+
+Please be sure to add your agents IN ORDER, with the 'player' agent at the very beginning. The code will not work properly if the agent names and actual agents aren't aligned.
 
 ## Development
 

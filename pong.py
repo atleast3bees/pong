@@ -8,6 +8,7 @@ Description: Contains the PongEnvironment class and all of its functionality
 
 import sys
 import pygame
+import yaml
 from numpy import random
 sys.path.append("agents")
 from easy_CPU import EasyAgent
@@ -17,8 +18,10 @@ from random_CPU import RandomAgent
 easyA = EasyAgent()
 hardA = HardAgent()
 randA = RandomAgent()
-agentlist = ("player", "easy_cpu", "hard_cpu", "random_cpu")
 agents = (easyA, hardA, randA)
+with open("agent_list.yaml", 'r') as stream:
+    out = yaml.safe_load(stream)
+agentlist = out['agents']
 
 class InvalidAgentError(Exception):
     "Raised when an invalid agent is passed in"
@@ -131,7 +134,7 @@ class PongEnvironment:
     #Dictates the actions of the player
     def get_playeraction(self, action):
         if self.left_pos > 0:
-            if action[pygame.K_w]:
+            if action[pygame.K_w]: 
                 self.left_pos -= 400 * self.dt 
         if self.left_pos < 250:        
             if action[pygame.K_s]:

@@ -1,0 +1,1 @@
+agents: ["player", "easy_cpu", "hard_cpu", "random_cpu"]
